@@ -60,14 +60,63 @@ export default function Settings() {
 
 const styles = StyleSheet.create({
   wrap: { flex: 1, padding: 20 },
-  header: { flexDirection: "row", alignItems: "center", gap: 14, marginBottom: 16 },
-  avatar: { width: 60, height: 60, borderRadius: 30 },
-  name: { color: text, fontWeight: "800", fontSize: 22 },
-  email: { color: sub },
-  card: { backgroundColor: card, borderRadius: 16, padding: 12, gap: 14 },
-  row: { flexDirection: "row", alignItems: "center", gap: 12 },
-  rowLabel: { color: text, fontWeight: "700", flex: 1 },
-  rowValue: { color: sub, fontWeight: "600" },
-  logout: { marginTop: 20, paddingVertical: 14, borderRadius: 12, alignItems: "center", backgroundColor: "#152233" },
-  logoutText: { color: text, fontWeight: "800" },
+  header: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    gap: 14, 
+    marginBottom: 16
+   },
+
+  avatar: { 
+    width: 60, 
+    height: 60, 
+    borderRadius: 30 
+  },
+
+  name: { 
+    color: text, 
+    fontWeight: "800", 
+    fontSize: 22 
+  },
+
+  email: { 
+    color: sub 
+
+  },
+
+  card: { backgroundColor: card, 
+    borderRadius: 16, 
+    padding: 12, 
+    gap: 14 
+  },
+
+  row: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    gap: 12 
+  },
+
+  rowLabel: { 
+    color: text, 
+    fontWeight: "700", 
+    flex: 1 
+  },
+
+  rowValue: { 
+    color: sub, 
+    fontWeight: "600" 
+  },
+
+  logout: { 
+    marginTop: 20, 
+    paddingVertical: 14, 
+    borderRadius: 12, 
+    alignItems: "center", 
+    backgroundColor: "#152233" 
+  },
+
+  logoutText: { 
+    color: text, 
+    fontWeight: "800" 
+  },
 });

@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     fontSize: 26, 
     fontWeight: "800", 
     marginBottom: 24 },
+
     sosBtn: { alignSelf: "center", 
     backgroundColor: orange, 
     width: 160, 
@@ -39,8 +40,10 @@ const styles = StyleSheet.create({
     alignItems: "center", 
     justifyContent: "center", 
     gap: 8 },
+    
     sosLabel: { color: "#fff", 
     fontWeight: "800" },
+
   mapCard: { marginTop: 28, 
     backgroundColor: card, 
     borderRadius: 16, 
@@ -48,6 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: "row", 
     alignItems: "center", 
     gap: 10 },
+
   mapText: { color: sub, 
     fontWeight: "600" },
 });

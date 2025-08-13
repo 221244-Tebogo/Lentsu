@@ -31,7 +31,21 @@ export default function Profile({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  c: { flex: 1, backgroundColor: "#0B284A", padding: 20, justifyContent: "center" },
-  t: { color: "#fff", fontSize: 24, fontWeight: "800" },
-  s: { color: "#E6EEF7", marginTop: 8 },
+  c: { flex: 1, 
+    backgroundColor: "#0B284A", 
+    padding: 20, 
+    justifyContent: "center" 
+  },
+
+
+  t: { 
+    color: "#fff", 
+    fontSize: 24, 
+    fontWeight: "800" 
+  },
+
+  s: { 
+    color: "#E6EEF7", 
+    marginTop: 8 
+  },
 });

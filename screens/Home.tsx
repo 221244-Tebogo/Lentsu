@@ -73,13 +73,54 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  primaryText: { color: "#fff", fontWeight: "800", fontSize: 16 },
-  row: { flexDirection: "row", gap: 12 },
-  tile: { flex: 1, backgroundColor: card, borderRadius: 16, padding: 16 },
-  tileTitle: { color: text, fontWeight: "800", marginTop: 8 },
-  tileSub: { color: sub, marginTop: 4 },
-  card: { backgroundColor: card, borderRadius: 16, padding: 16, gap: 10 },
-  cardTitle: { color: text, fontWeight: "800", marginBottom: 4 },
-  statusRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  statusText: { color: sub },
+  primaryText: { 
+    color: "#fff", 
+    fontWeight: "800", 
+    fontSize: 16 
+  },
+
+  row: { 
+    flexDirection: "row", 
+    gap: 12 
+  },
+
+  tile: { 
+    flex: 1, 
+    backgroundColor: card, 
+    borderRadius: 16, 
+    padding: 16 
+  },
+
+  tileTitle: { 
+    color: text, 
+    fontWeight: "800", 
+    marginTop: 8 
+  },
+
+  tileSub: { 
+    color: sub, 
+    marginTop: 4 
+  },
+
+  card: { 
+    backgroundColor: card,
+    borderRadius: 16, 
+    padding: 16, 
+    gap: 10 },
+
+  cardTitle: { 
+    color: text, 
+    fontWeight: "800", 
+    marginBottom: 4 
+  },
+  
+  statusRow: { 
+    flexDirection: "row",
+    alignItems: "center", 
+    gap: 8 
+  },
+
+  statusText: { 
+    color: sub 
+  },
 });

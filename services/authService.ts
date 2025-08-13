@@ -52,3 +52,15 @@ export const getUserInfo = () => {
     return null;
   }
 };
+//5W4U6agRTOdgg8drjFN4XNf3yZn1
+
+//FIREBASE GOOGLE SETUP
+// Important: To enable Google Sign-In for your Android apps, you must provide the SHA-1 release fingerprint for each app (go to Project settings > Your apps section).
+
+// Update the project-level setting below to continue
+// Public-facing name for project
+
+// project-1044569860680
+// Support email for project
+
+// 221244@virtualwindow.co.za

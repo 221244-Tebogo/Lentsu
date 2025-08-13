@@ -38,14 +38,67 @@ export default function Listen() {
 }
 
 const styles = StyleSheet.create({
-  wrap: { flex: 1, padding: 20 },
-  h1: { color: text, fontSize: 28, fontWeight: "800", marginBottom: 24 },
+  wrap: { 
+    flex: 1, 
+    padding: 20 
+  },
+
+  h1: { 
+    color: text, 
+    fontSize: 28, 
+    fontWeight: "800",
+    marginBottom: 24 
+  },
+
+
   accent: { color: "#FFC530" },
-  micWrap: { alignItems: "center", justifyContent: "center", marginVertical: 24 },
-  micRing: { width: 180, height: 180, borderRadius: 90, backgroundColor: ring },
-  micInner: { position: "absolute", width: 120, height: 120, borderRadius: 60, backgroundColor: orange, alignItems: "center", justifyContent: "center" },
-  helper: { color: sub, textAlign: "center" },
-  row: { flexDirection: "row", gap: 12, marginTop: 28 },
-  tile: { flex: 1, backgroundColor: card, borderRadius: 16, padding: 16, alignItems: "center", gap: 8 },
-  tileText: { color: text, fontWeight: "700" },
+
+  micWrap: { 
+    alignItems: "center", 
+    justifyContent: "center", 
+    marginVertical: 24 
+  },
+
+  micRing: { 
+    width: 180, 
+    height: 180, 
+    borderRadius: 90, 
+    backgroundColor: ring 
+  },
+
+
+  micInner: { 
+    position: "absolute", 
+    width: 120, 
+    height: 120, 
+    borderRadius: 60, 
+    backgroundColor: orange, 
+    alignItems: "center", 
+    justifyContent: "center" 
+  },
+
+  helper: { 
+    color: sub, 
+    textAlign: "center" 
+  },
+
+  row: { 
+    flexDirection: "row",
+    gap: 12, 
+    marginTop: 28 
+  },
+
+  tile: { 
+    flex: 1, 
+    backgroundColor: card, 
+    borderRadius: 16, 
+    padding: 16, 
+    alignItems: "center", 
+    gap: 8 
+  },
+
+  tileText: { 
+    color: text, 
+    fontWeight: "700" 
+  },
 });
