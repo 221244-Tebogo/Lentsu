@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fce7b1f1-1961-4c19-ad49-abbf3d03f6b7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/firebase.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/Camera.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Camera.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/Listen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Listen.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="fce7b1f1-1961-4c19-ad49-abbf3d03f6b7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
