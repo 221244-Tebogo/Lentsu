@@ -38,12 +38,12 @@ export default function Home() {
       </View>
 
       {/* Recent activity / status */}
-    <View style={styles.row}>
-  <TouchableOpacity style={styles.tile} onPress={() => nav.navigate("Emergency")}>
-    <Ionicons name="alert-circle" size={22} color={orange} />
-    <Text style={styles.tileTitle}>Emergency</Text>
-    <Text style={styles.tileSub}>Get help fast</Text>
-  </TouchableOpacity>
+<TouchableOpacity style={styles.tile} onPress={() => nav.navigate("Camera")}>
+  <Ionicons name="camera" size={22} color="#8BC3FF" />
+  <Text style={styles.tileTitle}>Camera</Text>
+  <Text style={styles.tileSub}>Take a photo</Text>
+</TouchableOpacity>
+
 
   <TouchableOpacity style={styles.tile} onPress={() => nav.navigate("Settings")}>
     <Ionicons name="settings" size={22} color={yellow} />
@@ -58,7 +58,6 @@ export default function Home() {
   </TouchableOpacity>
 </View>
 
-      </View>
   );
 }
 

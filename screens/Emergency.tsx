@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 const text = "#E6EEF7";
 const sub = "#90A4B8";
 const card = "#0E1C2C";
-const orange = "#FF7A2F";
+const orange = "#FBBC05";
 
 export default function Emergency() {
   return (

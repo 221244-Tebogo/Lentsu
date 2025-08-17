@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./screens/Login";
 import Registration from "./screens/Registration";
 import Home from "./screens/Home";
+import Camera from "./screens/Camera";
 import Listen from "./screens/Listen";
 import Emergency from "./screens/Emergency";
 import Settings from "./screens/Settings";
@@ -30,6 +31,7 @@ export default function App() {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Listen" component={Listen} />
         <Stack.Screen name="Emergency" component={Emergency} />
+        <Stack.Screen name="Camera" component={Camera} />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="Profile" component={Profile} />
       </Stack.Navigator>
