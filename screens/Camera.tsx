@@ -16,6 +16,9 @@ import {
   useCameraPermissions,
   useMicrophonePermissions,
 } from "expo-camera";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { auth, db, storage } from "../firebase";
 import { useVideoPlayer, VideoView } from "expo-video";
 import * as MediaLibrary from "expo-media-library";
 import { useIsFocused } from "@react-navigation/native";
