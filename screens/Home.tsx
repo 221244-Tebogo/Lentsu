@@ -20,7 +20,7 @@ export default function Home() {
       </Text>
 
       {/* Big primary action */}
-      <TouchableOpacity style={styles.primary} onPress={() => nav.navigate("Listen")}>
+      <TouchableOpacity style={styles.primary} onPress={() => nav.navigate("VoiceApp")}>
         <Ionicons name="mic" size={40} color="#fff" />
         <Text style={styles.primaryText}>Tap to speak</Text>
       </TouchableOpacity>

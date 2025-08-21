@@ -1,4 +1,3 @@
-// App.tsx (only the relevant changes)
 import React, { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
@@ -14,6 +13,7 @@ import Home from "./screens/Home";
 import MapShare from "./screens/MapShare";
 import Camera from "./screens/Camera";
 import Listen from "./screens/Listen";
+import VoiceApp from './screens/VoiceApp';
 import Emergency from "./screens/Emergency";
 import Settings from "./screens/Settings";
 import Profile from "./screens/Profile";
@@ -58,6 +58,9 @@ export default function App() {
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="MapShare" component={MapShare} />
             <Stack.Screen name="Listen" component={Listen} />
+
+        <Stack.Screen name="VoiceApp" component={VoiceApp} />
+
             <Stack.Screen name="Emergency" component={Emergency} />
             <Stack.Screen name="Camera" component={Camera} />
             <Stack.Screen name="Settings" component={Settings} />
