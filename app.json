@@ -1,6 +1,9 @@
 {
   "expo": {
     "scheme": "lentsu",
+
+"platforms": ["ios", "android", "web"],
+
     "name": "lentsu",
     "slug": "lentsu",
     "version": "1.0.0",
@@ -9,7 +12,7 @@
     "userInterfaceStyle": "light",
         "android": { "adaptiveIcon": { "foregroundImage": "./assets/icon.png", "backgroundColor": "#0B284A" } },
 
-    "newArchEnabled": true,
+    "newArchEnabled": false, 
 
     "splash": {
       "image": "./assets/logo.png",
@@ -18,6 +21,7 @@
     },
 
     "ios": {
+      "googleServicesFile": "./ios/GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.yourcompany.lentsu",
       "config": {
@@ -44,12 +48,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.yourcompany.lentsu",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyC_eMAo82GEngecUl7az3YtLk4B9MJrUTE"
-        }
-      }
+      "package": "com.yourcompany.lentsu"
     },
 
     "web": {

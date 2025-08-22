@@ -1,7 +1,9 @@
-import React from "react";
+// screens/Home.tsx
+import React, { useMemo } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../context/auth";
 
 const text = "#E6EEF7";
 const sub = "#90A4B8";
@@ -12,20 +14,24 @@ const blue = "#8BC3FF";
 
 export default function Home() {
   const nav = useNavigation<any>();
+  const { user } = useAuth();
+
+  const displayName = useMemo(
+    () => user?.name || (user?.email ? user.email.split("@")[0] : "Friend"),
+    [user?.name, user?.email]
+  );
 
   return (
     <View style={styles.wrap}>
       <Text style={styles.h1}>
-        Welcome back, <Text style={styles.accent}>Naledi</Text>
+        Hello, <Text style={styles.accent}>{displayName}</Text>!
       </Text>
 
-      {/* Big primary action */}
       <TouchableOpacity style={styles.primary} onPress={() => nav.navigate("VoiceApp")}>
         <Ionicons name="mic" size={40} color="#fff" />
         <Text style={styles.primaryText}>Tap to speak</Text>
       </TouchableOpacity>
 
-      {/* Quick actions */}
       <View style={styles.row}>
         <TouchableOpacity style={styles.tile} onPress={() => nav.navigate("Emergency")}>
           <Ionicons name="alert-circle" size={22} color={orange} />
@@ -54,62 +60,23 @@ export default function Home() {
         </TouchableOpacity>
       </View>
 
-      {/* Settings */}
       <TouchableOpacity style={styles.tile} onPress={() => nav.navigate("Settings")}>
         <Ionicons name="settings" size={22} color={yellow} />
         <Text style={styles.tileTitle}>Settings</Text>
         <Text style={styles.tileSub}>ICE, language, voice</Text>
       </TouchableOpacity>
     </View>
-
-    
   );
 }
 
 const styles = StyleSheet.create({
-  wrap: {
-    flex: 1,
-    padding: 20,
-    gap: 16,
-    backgroundColor: "#000", // Consider using a dark background to contrast your cards
-  },
-  h1: {
-    color: text,
-    fontSize: 26,
-    fontWeight: "800",
-  },
-  accent: {
-    color: yellow,
-  },
-  primary: {
-    backgroundColor: orange,
-    borderRadius: 18,
-    paddingVertical: 24,
-    alignItems: "center",
-    gap: 8,
-  },
-  primaryText: {
-    color: "#fff",
-    fontWeight: "800",
-    fontSize: 16,
-  },
-  row: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  tile: {
-    flex: 1,
-    backgroundColor: card,
-    borderRadius: 16,
-    padding: 16,
-  },
-  tileTitle: {
-    color: text,
-    fontWeight: "800",
-    marginTop: 8,
-  },
-  tileSub: {
-    color: sub,
-    marginTop: 4,
-  },
+  wrap: { flex: 1, padding: 20, gap: 16, backgroundColor: "#000" },
+  h1: { color: text, fontSize: 26, fontWeight: "800" },
+  accent: { color: yellow },
+  primary: { backgroundColor: orange, borderRadius: 18, paddingVertical: 24, alignItems: "center", gap: 8 },
+  primaryText: { color: "#fff", fontWeight: "800", fontSize: 16 },
+  row: { flexDirection: "row", gap: 12 },
+  tile: { flex: 1, backgroundColor: card, borderRadius: 16, padding: 16 },
+  tileTitle: { color: text, fontWeight: "800", marginTop: 8 },
+  tileSub: { color: sub, marginTop: 4 },
 });

@@ -1,62 +1,74 @@
-# Learn more https://docs.github.com/en/getting-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# -----------------------
+# Dependencies / builds
+# -----------------------
 node_modules/
+dist/
+web-build/
 
 # Expo
 .expo/
 .expo-shared/
-dist/
-web-build/
 expo-env.d.ts
 
-# Native Android
-.android/
-.gradle/
-local.properties
-*.jks
-*.keystore
-*.orig.*
-*.iml
-
-# Native iOS
-ios/Pods/
-ios/build/
-ios/DerivedData/
-ios/*.xcworkspace/
-ios/*.xcodeproj/project.xcworkspace/
-ios/*.xcuserdata/
-*.mobileprovision
-*.p8
-*.p12
-*.key
+# EAS local cache
+.easlrc
+.easlocal/
 
 # Metro
 .metro-health-check*
 
-# debug
+android/.gradle/
+android/app/build/
+ios/Pods/
+ios/build/
+ios/DerivedData/
+ios/*.xcuserdata/
+
+# Keystores / signing
+*.jks
+*.keystore
+*.orig.*
+*.mobileprovision
+*.p8
+*.p12
+*.key
+*.pem
+
+# Firebase config (keep out of git)
+android/app/google-services.json
+ios/GoogleService-Info.plist
+
+# -----------------------
+# Environment files
+# -----------------------
+.env
+.env.*
+!.env.example          # <-- commit template only
+
+.envrc
+*.local
+
+# App config local overrides
+app.config.local.ts
+app.config.local.js
+
+# -----------------------
+# IDE / OS / logs
+# -----------------------
+# macOS
+.DS_Store
+
+# JetBrains / VSCode
+.idea/
+*.iml
+.vscode/
+
+# Logs & lockfiles
+*.log
 npm-debug.*
 yarn-debug.*
 yarn-error.*
-
-# macOS
-.DS_Store
-*.pem
 *.swp
-
-# local env files
-.env
-.env*.local
 
 # TypeScript
 *.tsbuildinfo
-
-# JetBrains / IDE
-.idea/
-*.iml
-
-# Logs
-*.log
-
-# Others
-*.lock

@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 });
 
 
-//--------------OLD----
+//--------------OLD NOT WOR----
 // import React, { useState, useEffect } from 'react';
 // import { View, Text, Button, PermissionsAndroid, Platform } from 'react-native';
 // import Voice from '@react-native-voice/voice';
