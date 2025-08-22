@@ -1,4 +1,3 @@
-//RECORDINGS.TSX
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from "react-native";
 import { listMyRecordings, deleteMyRecording } from "../services/recordingsService";

@@ -1,4 +1,3 @@
-// utils/name.ts
 export function nameFromEmail(email?: string | null) {
   if (!email) return null;
   const raw = email.split("@")[0] ?? "";

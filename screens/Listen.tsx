@@ -1,4 +1,3 @@
-// screens/Listen.tsx
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, Button, Alert, FlatList, TouchableOpacity, Platform } from "react-native";
 import { Audio } from "expo-av";
@@ -36,7 +35,7 @@ export default function Listen() {
   const [uid, setUid] = useState<string | null>(null);
   const soundRef = useRef<Audio.Sound | null>(null);
 
-  // track auth
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => setUid(user?.uid ?? null));
     return unsub;
@@ -76,7 +75,6 @@ export default function Listen() {
     [uid]
   );
 
-  // read user recordings from Firestore and merge into local cache
   const mergeFromFirestore = useCallback(async () => {
     if (!uid) return;
     try {
@@ -168,7 +166,7 @@ export default function Listen() {
       const tempUri = recording.getURI();
       if (!tempUri) throw new Error("Recording URI is undefined");
 
-      // move to per-user dir
+  
       await ensureDirAsync();
       const fileName = `rec-${Date.now()}.m4a`;
       const finalPath = RECORDINGS_DIR(uid) + fileName;

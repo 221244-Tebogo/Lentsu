@@ -1,314 +1,348 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Share } from 'react-native';
-import Voice from '@react-native-voice/voice';
+// screens/VoiceApp.tsx
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  Alert,
+  Share,
+  Animated,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import Voice from "@react-native-voice/voice";
+import { useNavigation } from "@react-navigation/native";
+import { Audio } from "expo-av";
 
-export default function App() {
-  const [text, setText] = useState('');
+const YELLOW = "#FBBC05";
+const TEXT = "#E6EEF7";
+const SUB = "#90A4B8";
+const CARD = "#0E1C2C";
+
+export default function VoiceApp() {
+  const nav = useNavigation<any>();
+
+  const [text, setText] = useState("");
+  const [listening, setListening] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  // pulse animation while listening
+  const scale = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    let loop: Animated.CompositeAnimation | null = null;
+    if (listening) {
+      loop = Animated.loop(
+        Animated.sequence([
+          Animated.timing(scale, { toValue: 1.1, duration: 500, useNativeDriver: true }),
+          Animated.timing(scale, { toValue: 1.0, duration: 500, useNativeDriver: true }),
+        ])
+      );
+      loop.start();
+    }
+    return () => loop?.stop();
+  }, [listening]);
+
+  // success “tap” sound (same asset used elsewhere)
+  const playSuccess = useCallback(async () => {
+    try {
+      const { sound } = await Audio.Sound.createAsync(require("../assets/success-340660.mp3"));
+      await sound.playAsync();
+      setTimeout(() => sound.unloadAsync(), 400);
+    } catch {}
+  }, []);
+
+  // wire voice events
+  useEffect(() => {
+    Voice.onSpeechStart = () => setListening(true);
+    Voice.onSpeechEnd = () => setListening(false);
+    Voice.onSpeechError = (e: any) => {
+      setListening(false);
+      if (String(e?.error?.message || "").includes("not authorized")) {
+        Alert.alert("Mic permission", "Please enable microphone & speech recognition.");
+      }
+    };
+    Voice.onSpeechResults = (e: any) => {
+      const v = e?.value?.[0];
+      if (typeof v === "string") setText(v);
+    };
+    Voice.onSpeechPartialResults = (e: any) => {
+      const v = e?.value?.[0];
+      if (typeof v === "string") setText(v);
+    };
+
+    return () => {
+      // recommended cleanup pattern for react-native-voice
+      // @ts-ignore
+      Voice.destroy().then(Voice.removeAllListeners).catch(() => {});
+    };
+  }, []);
+
+  const LANG = Platform.select({ ios: "en-ZA", android: "en-US", default: "en-US" });
 
   const startListening = async () => {
-    Voice.onSpeechResults = (e) => setText(e.value[0]);
-    await Voice.start('en-US');
+    try {
+      setBusy(true);
+      await Voice.start(LANG as string);
+    } catch (e: any) {
+      Alert.alert("Couldn’t start voice", e?.message ?? "Unknown error");
+    } finally {
+      setBusy(false);
+    }
   };
 
   const stopListening = async () => {
-    await Voice.stop();
+    try {
+      setBusy(true);
+      await Voice.stop();
+      playSuccess();
+    } catch (e: any) {
+      // ignore
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const toggleListening = () => {
+    if (listening) stopListening();
+    else startListening();
   };
 
   const clearText = () => {
-    setText('');
+    setText("");
+    playSuccess();
   };
 
   const shareText = async () => {
+    if (!text.trim()) {
+      Alert.alert("Nothing to share", "Say something first, then share.");
+      return;
+    }
     try {
-      await Share.share({
-        message: text,
-      });
-    } catch (error) {
-      alert('Error sharing text: ' + error.message);
+      await Share.share({ message: text.trim(), title: "Transcription" });
+      playSuccess();
+    } catch (e: any) {
+      Alert.alert("Share failed", e?.message ?? "Unknown error");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Button title="Start Voice" onPress={startListening} color="#ffffff" />
-      <View style={{ height: 10 }} />
-      <Button title="Stop Voice" onPress={stopListening} color="#ffffff" />
-      <View style={{ height: 10 }} />
-      <Button title="Clear" onPress={clearText} color="#ff4444" />
-      <View style={{ height: 10 }} />
-      <Button title="Share" onPress={shareText} color="#00cc00" />
-      <Text style={styles.resultText}>Result: {text}</Text>
-    </View>
+    <SafeAreaView style={styles.root}>
+      {/* Center: mic control (like your SOS/Login hero) */}
+      <View style={styles.center}>
+        <Animated.View style={{ transform: [{ scale }] }}>
+          <TouchableOpacity
+            style={[styles.micBtn, listening && styles.micBtnActive]}
+            onPress={toggleListening}
+            activeOpacity={0.85}
+            disabled={busy}
+          >
+            <Ionicons name={listening ? "mic" : "mic-outline"} size={40} color="#0B0F14" />
+          </TouchableOpacity>
+        </Animated.View>
+        <Text style={styles.meta}>
+          {busy ? "Preparing…" : listening ? "Listening…" : "Tap to start"}
+        </Text>
+      </View>
+
+      {/* Transcript card near bottom for one-hand reach */}
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Transcript</Text>
+        <Text style={styles.cardBody}>{text || "—"}</Text>
+      </View>
+
+      {/* Bottom thumb-zone actions */}
+      <View style={styles.bottom}>
+        <TouchableOpacity style={styles.btnPrimary} onPress={shareText} activeOpacity={0.95}>
+          <Text style={styles.btnPrimaryText}>Share</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.btnOutline} onPress={clearText} activeOpacity={0.9}>
+          <Text style={styles.btnOutlineText}>Clear</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.homeChip}
+          onPress={() => nav.navigate("Home")}
+          activeOpacity={0.9}
+        >
+          <Ionicons name="home-outline" size={16} color="#0B0F14" style={{ marginRight: 6 }} />
+          <Text style={styles.homeChipText}>Home</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
+  root: { flex: 1, backgroundColor: "transparent", paddingHorizontal: 16 },
+  center: { flex: 1, alignItems: "center", justifyContent: "center" },
+
+  micBtn: {
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    backgroundColor: YELLOW,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 14,
+    elevation: 8,
   },
-  resultText: {
-    color: '#ffffff',
-    fontSize: 18,
-    marginTop: 20,
+  micBtnActive: {
+    // subtle ring when active
+    borderWidth: 4,
+    borderColor: "rgba(251,188,5,0.45)",
+  },
+
+  meta: {
+    marginTop: 12,
+    color: SUB,
+    fontSize: 13,
+    fontFamily: Platform.select({
+      ios: "Poppins-Regular",
+      android: "Poppins_400Regular",
+      default: "Poppins_400Regular",
+    }),
+  },
+
+  card: {
+    backgroundColor: CARD,
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 12,
+  },
+  cardTitle: {
+    color: TEXT,
+    opacity: 0.9,
+    fontSize: 12,
+    marginBottom: 6,
+    fontFamily: Platform.select({
+      ios: "Poppins-Medium",
+      android: "Poppins_500Medium",
+      default: "Poppins_500Medium",
+    }),
+  },
+  cardBody: {
+    color: TEXT,
+    fontSize: 16,
+    lineHeight: 22,
+    minHeight: 44,
+    fontFamily: Platform.select({
+      ios: "Poppins-Regular",
+      android: "Poppins_400Regular",
+      default: "Poppins_400Regular",
+    }),
+  },
+
+  bottom: {
+    paddingBottom: 20,
+    gap: 10,
+  },
+
+  btnPrimary: {
+    backgroundColor: YELLOW,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  btnPrimaryText: {
+    color: "#0B0F14",
+    fontSize: 16,
+    fontFamily: Platform.select({
+      ios: "Poppins-SemiBold",
+      android: "Poppins_600SemiBold",
+      default: "Poppins_600SemiBold",
+    }),
+  },
+
+  btnOutline: {
+    borderWidth: 1,
+    borderColor: YELLOW,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnOutlineText: {
+    color: YELLOW,
+    fontSize: 16,
+    fontFamily: Platform.select({
+      ios: "Poppins-Medium",
+      android: "Poppins_500Medium",
+      default: "Poppins_500Medium",
+    }),
+  },
+
+  homeChip: {
+    alignSelf: "flex-end",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: YELLOW,
+  },
+  homeChipText: {
+    color: "#0B0F14",
+    fontSize: 12,
+    fontFamily: Platform.select({
+      ios: "Poppins-Medium",
+      android: "Poppins_500Medium",
+      default: "Poppins_500Medium",
+    }),
   },
 });
 
 
-//--------------OLD NOT WOR----
-// import React, { useState, useEffect } from 'react';
-// import { View, Text, Button, PermissionsAndroid, Platform } from 'react-native';
+// import React, { useState } from 'react';
+// import { View, Text, Button, StyleSheet, Share } from 'react-native';
 // import Voice from '@react-native-voice/voice';
 
-// const VoiceApp = () => {
-//   const [recognizedText, setRecognizedText] = useState('');
-//   const [isListening, setIsListening] = useState(false);
-
-//   useEffect(() => {
-//     Voice.onSpeechStart = () => setIsListening(true);
-//     Voice.onSpeechEnd = () => setIsListening(false);
-//     Voice.onSpeechResults = (event) => setRecognizedText(event.value[0]);
-//     Voice.onSpeechError = (error) => console.error('Speech error:', error);
-
-//     return () => {
-//       Voice.destroy().then(Voice.removeAllListeners);
-//     };
-//   }, []);
-
-//   const requestAudioPermission = async () => {
-//     if (Platform.OS === 'android') {
-//       try {
-//         const granted = await PermissionsAndroid.request(
-//           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-//           {
-//             title: 'Microphone Permission',
-//             message: 'This app needs access to your microphone to record audio.',
-//             buttonNeutral: 'Ask Me Later',
-//             buttonNegative: 'Cancel',
-//             buttonPositive: 'OK',
-//           },
-//         );
-//         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-//           console.log('You can use the microphone');
-//         } else {
-//           console.log('Microphone permission denied');
-//         }
-//       } catch (err) {
-//         console.warn(err);
-//       }
-//     }
-//   };
+// export default function App() {
+//   const [text, setText] = useState('');
 
 //   const startListening = async () => {
-//     await requestAudioPermission(); // Request permission before starting
-//     try {
-//       await Voice.start('en-US'); // Specify language code
-//     } catch (e) {
-//       console.error(e);
-//     }
+//     Voice.onSpeechResults = (e) => setText(e.value[0]);
+//     await Voice.start('en-US');
 //   };
 
 //   const stopListening = async () => {
+//     await Voice.stop();
+//   };
+
+//   const clearText = () => {
+//     setText('');
+//   };
+
+//   const shareText = async () => {
 //     try {
-//       await Voice.stop();
-//     } catch (e) {
-//       console.error(e);
-//     }
-//   };
-
-//   return (
-//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//       <Text>{recognizedText}</Text>
-//       <Button title={isListening ? 'Stop Listening' : 'Start Listening'} onPress={isListening ? stopListening : startListening} />
-//     </View>
-//   );
-// };
-
-// export default VoiceApp;
-
-// import React, { useState, useEffect } from 'react';
-// import { View, Text, Button, StyleSheet } from 'react-native';
-// import Voice from '@react-native-community/voice';
-
-// const VoiceApp = () => {
-//   const [recognizedText, setRecognizedText] = useState('');
-//   const [isListening, setIsListening] = useState(false);
-
-//   useEffect(() => {
-//     Voice.onSpeechStart = onSpeechStart;
-//     Voice.onSpeechEnd = onSpeechEnd;
-//     Voice.onSpeechResults = onSpeechResults;
-//     Voice.onSpeechError = onSpeechError;
-
-//     return () => {
-//       Voice.destroy().then(Voice.removeAllListeners);
-//     };
-//   }, []);
-
-//   const onSpeechStart = (e) => {
-//     console.log('onSpeechStart: ', e);
-//     setIsListening(true);
-//   };
-
-//   const onSpeechEnd = (e) => {
-//     console.log('onSpeechEnd: ', e);
-//     setIsListening(false);
-//   };
-
-//   const onSpeechResults = (e) => {
-//     console.log('onSpeechResults: ', e);
-//     if (e.value && e.value.length > 0) {
-//       setRecognizedText(e.value[0]);
-//     }
-//   };
-
-//   const onSpeechError = (e) => {
-//     console.log('onSpeechError: ', e);
-//   };
-
-//   const startListening = async () => {
-//     setRecognizedText('');
-//     try {
-//       await Voice.start('en-US'); // Specify locale if needed
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
-//   const stopListening = async () => {
-//     try {
-//       await Voice.stop();
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.statusText}>
-//         Status: {isListening ? 'Listening...' : 'Not Listening'}
-//       </Text>
-//       <Text style={styles.resultText}>Recognized Text: {recognizedText}</Text>
-//       <View style={styles.buttonContainer}>
-//         <Button title="Start Listening" onPress={startListening} disabled={isListening} />
-//         <Button title="Stop Listening" onPress={stopListening} disabled={!isListening} />
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     padding: 20,
-//   },
-//   statusText: {
-//     fontSize: 18,
-//     marginBottom: 10,
-//   },
-//   resultText: {
-//     fontSize: 20,
-//     fontWeight: 'bold',
-//     textAlign: 'center',
-//     marginBottom: 20,
-//   },
-//   buttonContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-around',
-//     width: '100%',
-//   },
-// });
-
-// export default VoiceApp;
-
-// import React, { useState } from 'react';
-// import { View, Text, Button, StyleSheet } from 'react-native';
-// import * as SpeechRecognition from 'expo-speech-recognition';
-// import { useNavigation } from '@react-navigation/native';
-
-// const VoiceApp = () => {
-//   const [recognizedText, setRecognizedText] = useState('');
-//   const [isListening, setIsListening] = useState(false);
-//   const navigation = useNavigation();
-
-//   const handleCommand = (text) => {
-//     const command = text.toLowerCase();
-
-//     if (command.includes("open emergency")) {
-//       navigation.navigate("Emergency");
-//     } else if (command.includes("open profile")) {
-//       navigation.navigate("Profile");
-//     } else if (command.includes("call security")) {
-//       navigation.navigate("Security");
-//     } else if (command.includes("play music")) {
-//       navigation.navigate("Music");
-//     } else {
-//       console.log("Command not recognized.");
-//     }
-//   };
-
-//   const startListening = async () => {
-//     try {
-//       setIsListening(true);
-//       const result = await SpeechRecognition.startAsync({
-//         language: 'en-US',
+//       await Share.share({
+//         message: text,
 //       });
-
-//       const transcript = result.transcript;
-//       setRecognizedText(transcript);
-//       handleCommand(transcript);
-//       setIsListening(false);
-//     } catch (e) {
-//       console.error('Speech recognition error:', e);
-//       setIsListening(false);
+//     } catch (error) {
+//       alert('Error sharing text: ' + error.message);
 //     }
 //   };
 
 //   return (
 //     <View style={styles.container}>
-//       <Button
-//         title={isListening ? "Listening..." : "Tap to Speak"}
-//         onPress={startListening}
-//         disabled={isListening}
-//       />
-//       <Text style={styles.text}>You said: {recognizedText}</Text>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     padding: 20,
-//     backgroundColor: '#0E1C2C',
-//     flex: 1,
-//     justifyContent: 'center',
-//   },
-//   text: {
-//     marginTop: 20,
-//     color: '#FFC530',
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//   },
-// });
-
-// export default VoiceApp;
-
-//READS TEXTS 
-// import { View, StyleSheet, Button } from 'react-native';
-// import * as Speech from 'expo-speech';
-
-// export default function VoiceApp() {
-//   const speak = () => {
-//     const thingToSay = 'How can I help';
-//     Speech.speak(thingToSay);
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Button title="Press to hear some words" onPress={speak} />
+//       <Button title="Start Voice" onPress={startListening} color="#ffffff" />
+//       <View style={{ height: 10 }} />
+//       <Button title="Stop Voice" onPress={stopListening} color="#ffffff" />
+//       <View style={{ height: 10 }} />
+//       <Button title="Clear" onPress={clearText} color="#ff4444" />
+//       <View style={{ height: 10 }} />
+//       <Button title="Share" onPress={shareText} color="#00cc00" />
+//       <Text style={styles.resultText}>Result: {text}</Text>
 //     </View>
 //   );
 // }
@@ -316,8 +350,13 @@ const styles = StyleSheet.create({
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
+//     padding: 20,
 //     justifyContent: 'center',
-//     backgroundColor: '#ecf0f1',
-//     padding: 8,
+//   },
+//   resultText: {
+//     color: '#ffffff',
+//     fontSize: 18,
+//     marginTop: 20,
 //   },
 // });
+

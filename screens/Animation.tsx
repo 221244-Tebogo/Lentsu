@@ -1,27 +1,50 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { View, StyleSheet } from "react-native";
 import LottieView from "lottie-react-native";
+import { Audio } from "expo-av";
 
-type Props = {
-  onDone: () => void;
-};
+type Props = { onDone: () => void };
 
-export default function Animation({ onDone }: Props) {
+export default function SplashAnimation({ onDone }: Props) {
+  const doneRef = useRef(false);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onDone();
-    }, 4500); 
+   
+    let sound: Audio.Sound | null = null;
+    (async () => {
+      try {
+        const res = await Audio.Sound.createAsync(require("../assets/success-340660.mp3"));
+        sound = res.sound;
+        await sound.playAsync();
+      } catch {}
+    })();
 
-    return () => clearTimeout(timer);
+    // hard fallback in case onAnimationFinish doesn’t fire
+    const t = setTimeout(() => {
+      if (!doneRef.current) {
+        doneRef.current = true;
+        onDone();
+      }
+    }, 5000);
+
+    return () => {
+      clearTimeout(t);
+      if (sound) sound.unloadAsync();
+    };
   }, [onDone]);
 
   return (
     <View style={styles.container}>
       <LottieView
-        source={require("../assets/Rq0TA7iszQ.json")} 
+        source={require("../assets/Rq0TA7iszQ.json")}
         autoPlay
         loop={false}
-        onAnimationFinish={onDone}
+        onAnimationFinish={() => {
+          if (!doneRef.current) {
+            doneRef.current = true;
+            onDone();
+          }
+        }}
         style={styles.animation}
       />
     </View>
@@ -35,8 +58,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  animation: {
-    width: 300,
-    height: 300,
-  },
+  animation: { width: 300, height: 300 },
 });
