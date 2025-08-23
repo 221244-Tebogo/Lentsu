@@ -135,7 +135,12 @@ cd lentsu
 npm install
 
 ----
-<p align="center"> <video width="600" controls> <source src="Lentsu-Audio_Demonstration.mp4" type="video/mp4"> Your browser does not support the video tag. </video> </p>
+<p align="center">
+  <a href="https://drive.google.com/file/d/1QTD59IduE7ElwkqP8zsJDUH8Y2l-x2j3/view?usp=drive_link" target="_blank">
+    <img src="./Mockups/Main_Screen.png" alt="Watch Lentsu Demo Video" width="600"/>
+  </a>
+</p>
+
 
 ## Install Expo Modules
 npx expo install expo-auth-session expo-location expo-camera expo-av expo-video
