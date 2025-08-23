@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { View, StyleSheet } from "react-native";
-import LottieView from "lottie-react-native";
+import { Image } from "expo-image";       
 import { Audio } from "expo-av";
 
 type Props = { onDone: () => void };
@@ -9,23 +9,37 @@ export default function SplashAnimation({ onDone }: Props) {
   const doneRef = useRef(false);
 
   useEffect(() => {
-   
     let sound: Audio.Sound | null = null;
-    (async () => {
-      try {
-        const res = await Audio.Sound.createAsync(require("../assets/success-340660.mp3"));
-        sound = res.sound;
-        await sound.playAsync();
-      } catch {}
-    })();
 
-    // hard fallback in case onAnimationFinish doesn’t fire
-    const t = setTimeout(() => {
+    const finishOnce = () => {
       if (!doneRef.current) {
         doneRef.current = true;
         onDone();
       }
-    }, 5000);
+    };
+
+    (async () => {
+      try {
+        const { sound: snd } = await Audio.Sound.createAsync(
+          require("../assets/success-340660.mp3")
+        );
+        sound = snd;
+
+        sound.setOnPlaybackStatusUpdate((status) => {
+          // advance as soon as the sound finishes (if it plays)
+          if ("isLoaded" in status && status.isLoaded && status.didJustFinish) {
+            finishOnce();
+          }
+        });
+
+        await sound.playAsync();
+      } catch {
+        // ignore: the timeout below will still advance
+      }
+    })();
+
+ 
+    const t = setTimeout(finishOnce, 5000);
 
     return () => {
       clearTimeout(t);
@@ -35,17 +49,11 @@ export default function SplashAnimation({ onDone }: Props) {
 
   return (
     <View style={styles.container}>
-      <LottieView
-        source={require("../assets/Rq0TA7iszQ.json")}
-        autoPlay
-        loop={false}
-        onAnimationFinish={() => {
-          if (!doneRef.current) {
-            doneRef.current = true;
-            onDone();
-          }
-        }}
+      <Image
+        source={require("../assets/mic.gif")} 
         style={styles.animation}
+        contentFit="contain"
+       
       />
     </View>
   );

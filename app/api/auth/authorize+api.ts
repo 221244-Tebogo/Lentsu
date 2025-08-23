@@ -1,3 +1,4 @@
+//app/api/auth
 import type { NextRequest } from "next/server"; // Expo Router API routes use the same types
 import { NextResponse } from "next/server";
 

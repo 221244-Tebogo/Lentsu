@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "./firebase"; 
+import { auth } from "./firebase";
 
 import { AuthProvider } from "./context/auth";
 import AppUIProvider, { ThemeContext } from "./AppUIProvider";
@@ -23,6 +23,7 @@ import Registration from "./screens/Registration";
 import Home from "./screens/Home";
 import MapShare from "./screens/MapShare";
 import Camera from "./screens/Camera";
+
 import Listen from "./screens/Listen";
 import VoiceApp from "./screens/VoiceApp";
 import Emergency from "./screens/Emergency";
@@ -34,13 +35,10 @@ const AppStack = createNativeStackNavigator();
 const ONBOARD_KEY = "@seen_onboarding_v1";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
-
 export default function App() {
   const [ready, setReady] = useState(false);
   const [seen, setSeen] = useState<boolean | null>(null);
   const [showSplash, setShowSplash] = useState(true);
-
-  //Firebase auth gate
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
   useEffect(() => {
@@ -62,7 +60,6 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // Hide native splash once our custom splash is laid out
   const onSplashLayout = useCallback(async () => {
     if (ready && showSplash) {
       try { await SplashScreen.hideAsync(); } catch {}
@@ -70,7 +67,6 @@ export default function App() {
   }, [ready, showSplash]);
 
   if (!ready || seen === null || user === undefined) {
-    //  global loading 
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#0B284A" }}>
         <ActivityIndicator color="#fff" />
@@ -91,12 +87,8 @@ export default function App() {
                 <StatusBar style="light" />
 
                 {showSplash ? (
-                  // -----Lottie Splash -----
-                  <View style={{ flex: 1 }} onLayout={onSplashLayout}>
-                    <SplashAnimation onDone={() => setShowSplash(false)} />
-                  </View>
+                  <SplashAnimation onDone={() => setShowSplash(false)} />
                 ) : seen ? (
-                  // ----- Main App (Auth-gated) -----
                   <NavigationContainer theme={isDark ? NavDark : themeLight}>
                     {user ? (
                       <AppStack.Navigator screenOptions={{ headerShown: false }}>
@@ -117,7 +109,6 @@ export default function App() {
                     )}
                   </NavigationContainer>
                 ) : (
-                  // ----- Onboarding -----
                   <Onboarding
                     onDone={async () => {
                       try { await AsyncStorage.setItem(ONBOARD_KEY, "1"); } catch {}
@@ -125,6 +116,7 @@ export default function App() {
                     }}
                   />
                 )}
+
               </View>
             )}
           </ThemeContext.Consumer>

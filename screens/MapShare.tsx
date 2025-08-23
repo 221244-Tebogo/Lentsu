@@ -32,7 +32,7 @@ export default function MapShare() {
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
 
-  // initial permission + locate
+  // Request permission and get initial location
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -46,23 +46,30 @@ export default function MapShare() {
     })();
   }, []);
 
+  // Recenter to current location
   const recenter = useCallback(async () => {
     try {
       setWorking(true);
-      const currentLocation = await Location.getCurrentPositionAsync({});
+      const currentLocation = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Highest, // GPS-level accuracy
+        maximumAge: 1000,
+        timeout: 5000,
+      });
       setLocation(currentLocation);
       setRegion((prev) => ({
         ...prev,
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
       }));
-    } catch {
+    } catch (err) {
       Alert.alert("Error", "Could not get your current location.");
+      console.log(err);
     } finally {
       setWorking(false);
     }
   }, []);
 
+  // Share current location
   const handleShareLocation = async () => {
     if (!location) {
       Alert.alert("Location not available", "Try again in a few seconds.");
@@ -89,14 +96,19 @@ export default function MapShare() {
   return (
     <View style={styles.root}>
       {/* Map fills the screen; our controls float above */}
-      <MapViewWrapper region={region} showsUserLocation style={StyleSheet.absoluteFillObject as any} />
+      <MapViewWrapper
+        region={region}
+        showsUserLocation
+        followsUserLocation
+        style={StyleSheet.absoluteFillObject as any}
+      />
 
-      {/* Bottom info + actions (thumb zone) */}
+      {/* Bottom info + actions */}
       <View style={styles.bottom}>
-        {/* subtle status text */}
+        {/* Status text */}
         <Text style={styles.meta}>{coordsLabel}</Text>
 
-        {/* Primary Share button */}
+        {/* Share button */}
         <TouchableOpacity
           style={styles.primaryBtn}
           onPress={handleShareLocation}
@@ -110,21 +122,40 @@ export default function MapShare() {
           )}
         </TouchableOpacity>
 
-        {/* Utility row: Recenter + Home */}
+        {/* Recenter + Home */}
         <View style={styles.utilityRow}>
-          <TouchableOpacity style={styles.pillBtn} onPress={recenter} activeOpacity={0.9} disabled={working}>
+          <TouchableOpacity
+            style={styles.pillBtn}
+            onPress={recenter}
+            activeOpacity={0.9}
+            disabled={working}
+          >
             {working ? (
               <ActivityIndicator />
             ) : (
               <>
-                <Ionicons name="locate-outline" size={16} color={YELLOW} style={{ marginRight: 6 }} />
+                <Ionicons
+                  name="locate-outline"
+                  size={16}
+                  color={YELLOW}
+                  style={{ marginRight: 6 }}
+                />
                 <Text style={styles.pillText}>Recenter</Text>
               </>
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.homeChip} onPress={() => nav.navigate("Home")} activeOpacity={0.9}>
-            <Ionicons name="home-outline" size={16} color="#0B0F14" style={{ marginRight: 6 }} />
+          <TouchableOpacity
+            style={styles.homeChip}
+            onPress={() => nav.navigate("Home")}
+            activeOpacity={0.9}
+          >
+            <Ionicons
+              name="home-outline"
+              size={16}
+              color="#0B0F14"
+              style={{ marginRight: 6 }}
+            />
             <Text style={styles.homeChipText}>Home</Text>
           </TouchableOpacity>
         </View>
@@ -133,9 +164,9 @@ export default function MapShare() {
   );
 }
 
+// Styles
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: "transparent" },
-
   bottom: {
     position: "absolute",
     left: 16,
@@ -143,7 +174,6 @@ const styles = StyleSheet.create({
     bottom: 20,
     gap: 12,
   },
-
   meta: {
     alignSelf: "center",
     color: SUB,
@@ -154,7 +184,6 @@ const styles = StyleSheet.create({
       default: "Poppins_400Regular",
     }),
   },
-
   primaryBtn: {
     backgroundColor: YELLOW,
     borderRadius: 16,
@@ -176,13 +205,11 @@ const styles = StyleSheet.create({
       default: "Poppins_600SemiBold",
     }),
   },
-
   utilityRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-
   pillBtn: {
     flexDirection: "row",
     alignItems: "center",
@@ -202,7 +229,6 @@ const styles = StyleSheet.create({
       default: "Poppins_500Medium",
     }),
   },
-
   homeChip: {
     flexDirection: "row",
     alignItems: "center",

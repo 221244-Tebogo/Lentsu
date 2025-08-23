@@ -19,19 +19,15 @@ import { FontAwesome } from "@expo/vector-icons";
 const text = "#E6EEF7";
 
 export default function Login() {
-  const navigation = useNavigation();
-  const { signIn, isLoading, error, ready, user } = useAuth();
+  const navigation = useNavigation<any>();
+  const { signIn, isLoading, error, ready, user, reason } = useAuth(); // ✅ hook only inside component
   const { isDark } = React.useContext(ThemeContext);
 
+  // No manual navigation to "Home" needed — App.tsx swaps stacks on user change
   React.useEffect(() => {
-    if (user) {
-      // @ts-ignore
-      navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+    if (error) {
+      Alert.alert("Google sign-in failed", String((error as any)?.message ?? error));
     }
-  }, [user]);
-
-  React.useEffect(() => {
-    if (error) Alert.alert("Google sign-in failed", String(error?.message ?? error));
   }, [error]);
 
   return (
@@ -57,7 +53,7 @@ export default function Login() {
 
       <View style={styles.bottomBar}>
         <TouchableOpacity
-          style={styles.googleBtn}
+          style={[styles.googleBtn, (!ready || isLoading) && { opacity: 0.6 }]}
           onPress={signIn}
           disabled={!ready || isLoading}
           activeOpacity={0.9}
@@ -72,13 +68,16 @@ export default function Login() {
           )}
         </TouchableOpacity>
 
+        {/* Show why the button is disabled (e.g., missing client IDs) */}
+        {!!reason && !ready && <Text style={styles.hint}>{reason}</Text>}
+
         {/* Optional secondary link */}
         <TouchableOpacity
           onPress={() => {
-            // @ts-ignore
             navigation.navigate("Registration");
           }}
           style={styles.secondaryWrap}
+          activeOpacity={0.9}
         >
           <Text style={styles.secondaryText}>Create an account</Text>
         </TouchableOpacity>
@@ -155,6 +154,13 @@ const styles = StyleSheet.create({
       android: "Poppins_600SemiBold",
       default: "Poppins_600SemiBold",
     }),
+  },
+  hint: {
+    color: "#FFFFFF",
+    opacity: 0.8,
+    fontSize: 12,
+    textAlign: "center",
+    marginTop: 8,
   },
   secondaryWrap: { alignItems: "center" },
   secondaryText: {

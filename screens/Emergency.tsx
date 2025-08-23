@@ -13,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { db, auth } from "../firebase";
 import { Ionicons } from "@expo/vector-icons";
 
-// ---- constants ----
+
 type Coords = { lat: number | null; lon: number | null; accuracy?: number | null };
 const CONTACTS_KEY = "@trusted_contacts_v1";
 
@@ -75,7 +75,7 @@ export default function Emergency() {
 
   useEffect(() => onAuthStateChanged(auth, (u) => setUid(u?.uid ?? null)), []);
 
-  // load contacts + location on mount
+
   useEffect(() => {
     (async () => {
       const raw = await AsyncStorage.getItem(CONTACTS_KEY);
@@ -392,7 +392,7 @@ export default function Emergency() {
           </>
         )}
 
-        {/* Utility row: QUICK ACTIONS + Home */}
+ 
         <View style={styles.utilityRow}>
           <View style={styles.quickRow}>
             <TouchableOpacity style={styles.quickBtn} onPress={quickShareLocation} activeOpacity={0.85}>
@@ -414,87 +414,207 @@ export default function Emergency() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: "transparent" },
-  center: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 24 },
+  root: { 
+    flex: 1, 
+    backgroundColor: "transparent" 
+  },
+
+  center: { 
+    flex: 1, 
+    alignItems: "center", 
+    justifyContent: "center", 
+    paddingHorizontal: 24 
+  },
 
   label: {
-    color: TEXT, fontSize: 16, marginBottom: 10, textAlign: "center",
-    fontFamily: Platform.select({ ios: "Poppins-Medium", android: "Poppins_500Medium", default: "Poppins_500Medium" }),
+    color: TEXT,
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: "center",
+    fontFamily: Platform.select({
+      ios: "Poppins-Medium",
+      android: "Poppins_500Medium",
+      default: "Poppins_500Medium",
+    }),
   },
+
   big: {
-    color: "#FFFFFF", fontSize: 72, marginBottom: 8,
-    fontFamily: Platform.select({ ios: "Poppins-SemiBold", android: "Poppins_600SemiBold", default: "Poppins_600SemiBold" }),
+    color: "#FFFFFF",
+    fontSize: 72,
+    marginBottom: 8,
+    fontFamily: Platform.select({
+      ios: "Poppins-SemiBold",
+      android: "Poppins_600SemiBold",
+      default: "Poppins_600SemiBold",
+    }),
   },
+
   meta: {
-    marginTop: 16, color: SUB, fontSize: 12,
-    fontFamily: Platform.select({ ios: "Poppins-Regular", android: "Poppins_400Regular", default: "Poppins_400Regular" }),
+    marginTop: 16,
+    color: SUB,
+    fontSize: 12,
+    fontFamily: Platform.select({
+      ios: "Poppins-Regular",
+      android: "Poppins_400Regular",
+      default: "Poppins_400Regular",
+    }),
   },
 
   sosBtn: {
-    width: 200, height: 200, borderRadius: 100,
-    backgroundColor: GOOGLE_RED, alignItems: "center", justifyContent: "center",
-    shadowColor: "#000", shadowOpacity: 0.35, shadowRadius: 16, elevation: 8,
-  },
-  sosText: {
-    color: "#fff", fontSize: 56, letterSpacing: 2,
-    fontFamily: Platform.select({ ios: "Poppins-SemiBold", android: "Poppins_600SemiBold", default: "Poppins_600SemiBold" }),
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: GOOGLE_RED,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 8,
   },
 
-  bottom: { paddingHorizontal: 16, paddingBottom: 20, gap: 12 },
+  sosText: {
+    color: "#fff",
+    fontSize: 56,
+    letterSpacing: 2,
+    fontFamily: Platform.select({
+      ios: "Poppins-SemiBold",
+      android: "Poppins_600SemiBold",
+      default: "Poppins_600SemiBold",
+    }),
+  },
+
+  bottom: { 
+    paddingHorizontal: 16, 
+    paddingBottom: 20, 
+    gap: 12 
+  },
 
   btnPrimary: {
-    backgroundColor: YELLOW, borderRadius: 16, paddingVertical: 16, alignItems: "center", justifyContent: "center",
-    elevation: 2, shadowColor: "#000", shadowOpacity: 0.15, shadowRadius: 8, shadowOffset: { width: 0, height: 4 },
+    backgroundColor: YELLOW,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
   },
+
   btnPrimaryText: {
-    color: "#0B0F14", fontSize: 16,
-    fontFamily: Platform.select({ ios: "Poppins-SemiBold", android: "Poppins_600SemiBold", default: "Poppins_600SemiBold" }),
+    color: "#0B0F14",
+    fontSize: 16,
+    fontFamily: Platform.select({
+      ios: "Poppins-SemiBold",
+      android: "Poppins_600SemiBold",
+      default: "Poppins_600SemiBold",
+    }),
   },
 
   btnOutline: {
-    borderWidth: 1, borderColor: YELLOW, borderRadius: 16, paddingVertical: 16, alignItems: "center", justifyContent: "center",
+    borderWidth: 1,
+    borderColor: YELLOW,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
   },
+
   btnOutlineText: {
-    color: YELLOW, fontSize: 16,
-    fontFamily: Platform.select({ ios: "Poppins-Medium", android: "Poppins_500Medium", default: "Poppins_500Medium" }),
+    color: YELLOW,
+    fontSize: 16,
+    fontFamily: Platform.select({
+      ios: "Poppins-Medium",
+      android: "Poppins_500Medium",
+      default: "Poppins_500Medium",
+    }),
   },
 
   btnOutlineDestructive: {
-    borderWidth: 1, borderColor: GOOGLE_RED, borderRadius: 16, paddingVertical: 16, alignItems: "center", justifyContent: "center",
-  },
-  btnOutlineDestructiveText: {
-    color: GOOGLE_RED, fontSize: 16,
-    fontFamily: Platform.select({ ios: "Poppins-Medium", android: "Poppins_500Medium", default: "Poppins_500Medium" }),
+    borderWidth: 1,
+    borderColor: GOOGLE_RED,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
-  callRow: { flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 24, paddingTop: 4 },
-  callBtn: {
-    width: 64, height: 64, borderRadius: 32, alignItems: "center", justifyContent: "center",
-    shadowColor: "#000", shadowOpacity: 0.15, shadowRadius: 8, elevation: 4,
+  btnOutlineDestructiveText: {
+    color: GOOGLE_RED,
+    fontSize: 16,
+    fontFamily: Platform.select({
+      ios: "Poppins-Medium",
+      android: "Poppins_500Medium",
+      default: "Poppins_500Medium",
+    }),
   },
+
+  callRow: { 
+    flexDirection: "row", 
+    justifyContent: "center", 
+    alignItems: "center", 
+    gap: 24, 
+    paddingTop: 4 
+  },
+
+  callBtn: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
   callBtnGreen: { backgroundColor: GREEN },
   callBtnRed: { backgroundColor: GOOGLE_RED },
   callBtnDisabled: { opacity: 0.5 },
 
   // Bottom utility row
-  utilityRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 6 },
+  utilityRow: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    justifyContent: "space-between", 
+    marginTop: 6 
+  },
 
-  quickRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  quickRow: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    gap: 10 
+  },
+
   quickBtn: {
-    width: 40, height: 40, borderRadius: 20,
-    alignItems: "center", justifyContent: "center",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: YELLOW,
   },
 
   homeChip: {
-    flexDirection: "row", alignItems: "center",
-    paddingHorizontal: 12, paddingVertical: 8, borderRadius: 999,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
     backgroundColor: YELLOW,
   },
+
   homeChipText: {
-    color: "#0B0F14", fontSize: 12,
-    fontFamily: Platform.select({ ios: "Poppins-Medium", android: "Poppins_500Medium", default: "Poppins_500Medium" }),
+    color: "#0B0F14",
+    fontSize: 12,
+    fontFamily: Platform.select({
+      ios: "Poppins-Medium",
+      android: "Poppins_500Medium",
+      default: "Poppins_500Medium",
+    }),
   },
 });

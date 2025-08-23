@@ -25,11 +25,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.yourcompany.lentsu",
       "config": {
-        "googleMapsApiKey": "AIzaSyC_eMAo82GEngecUl7az3YtLk4B9MJrUTE"
+        "googleMapsApiKey": "AIzaSyAtNGipBfsjgOZmePSQ8tjN8fG8ryAjbpo"
+        
       },
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "We use your location to show where you are on the map and to share it with your contacts."
-      }
+ "NSLocationWhenInUseUsageDescription": "We use your location to show where you are on the map and to share it with your contacts.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location even when the app is in the background to accurately share it."      }
     },
 
     "android": {
@@ -77,12 +78,36 @@
       "expo-media-library",
       "expo-video",
       [
+     {
+  "expo": {
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B0F14",
+      "dark": { "backgroundColor": "#0B0F14" }
+    },
+    "ios": {
+      "splash": { "backgroundColor": "#0B0F14" }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0B0F14"
+      }
+    },
+    "plugins": [
+      [
         "expo-splash-screen",
         {
           "image": "./assets/logo.png",
           "resizeMode": "contain",
-          "backgroundColor": "FBBC05"
+          "backgroundColor": "#0B0F14"
         }
+      ]
+    ]
+  }
+}
+
       ]
     ],
 

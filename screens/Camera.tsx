@@ -64,12 +64,10 @@ export default function CameraScreen() {
   }, [previewUri, ensureMediaPermission]);
 
   const NavChip = (
-    <View style={styles.navBar}>
-      <TouchableOpacity onPress={goHomeOrBack} style={styles.navChip} activeOpacity={0.9}>
-        <Ionicons name="chevron-back" size={18} color="#0B0F14" style={{ marginRight: 6 }} />
-        <Text style={styles.navChipText}>{previewUri ? "Back" : "Home"}</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity onPress={goHomeOrBack} style={styles.navChip} activeOpacity={0.9}>
+      <Ionicons name="chevron-back" size={18} color="#0B0F14" style={{ marginRight: 6 }} />
+      <Text style={styles.navChipText}>{previewUri ? "Back" : "Home"}</Text>
+    </TouchableOpacity>
   );
 
   // views
@@ -85,7 +83,6 @@ export default function CameraScreen() {
 
   const PreviewView = (
     <View style={styles.previewWrap}>
-      {NavChip}
       {previewUri ? <Image source={{ uri: previewUri }} style={styles.preview} /> : null}
       <View style={styles.previewActions}>
         <TouchableOpacity style={styles.secondaryBtn} onPress={() => setPreviewUri(null)} disabled={saving}>
@@ -106,8 +103,7 @@ export default function CameraScreen() {
       flash={flash}
       active={isFocused}
     >
-      {NavChip}
-
+      {/* Flash + Flip stay on top-right */}
       <View style={styles.topBar}>
         <TouchableOpacity onPress={toggleFlash} style={styles.pillBtn}>
           <Text style={styles.pillText}>Flash: {flash.toUpperCase()}</Text>
@@ -117,7 +113,9 @@ export default function CameraScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* Bottom row: Home + Shutter */}
       <View style={styles.bottomBar}>
+        {NavChip}
         <TouchableOpacity onPress={takePhoto} style={styles.shutterOuter} activeOpacity={0.85}>
           <View style={styles.shutterInner} />
         </TouchableOpacity>
@@ -143,8 +141,6 @@ export default function CameraScreen() {
 const styles = StyleSheet.create({
   fill: { flex: 1, backgroundColor: "#000" },
 
-
-  navBar: { position: "absolute", top: 40, left: 16, zIndex: 10 },
   navChip: {
     backgroundColor: YELLOW,
     paddingHorizontal: 12,
@@ -177,8 +173,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 40,
     width: "100%",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-around", // space evenly
+    paddingHorizontal: 20,
   },
 
   pillBtn: { backgroundColor: "rgba(0,0,0,0.5)", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999 },

@@ -101,9 +101,11 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: "transparent" },
+  root: { 
+    flex: 1, 
+    backgroundColor: "transparent" 
+  },
 
   // Bottom Nav
   slide: {
@@ -114,7 +116,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
 
-  copyWrap: { paddingBottom: 140 },
+  copyWrap: { 
+    paddingBottom: 140 
+  },
 
   h1: {
     color: "#FFFFFF",
@@ -126,6 +130,7 @@ const styles = StyleSheet.create({
       default: "Poppins_600SemiBold",
     }),
   },
+
   p: {
     color: "#E6EEF7",
     fontSize: 16,
@@ -146,10 +151,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#425672" },
-  dotActive: { backgroundColor: "#FBBC05", width: 18 },
 
-  footer: { position: "absolute", bottom: 24, left: 24, right: 24 },
+  dot: { 
+    width: 8, 
+    height: 8, 
+    borderRadius: 4, 
+    backgroundColor: "#425672" 
+  },
+
+  dotActive: { 
+    backgroundColor: "#141413ff", 
+    width: 18 
+  },
+
+  footer: { 
+    position: "absolute", 
+    bottom: 24, 
+    left: 24, 
+    right: 24 
+  },
 
   btn: {
     backgroundColor: "#FBBC05",
@@ -163,6 +183,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
   },
+
   btnText: {
     color: "#0B0F14",
     fontSize: 16,
@@ -181,6 +202,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
   btnOutlineText: {
     color: "#FBBC05",
     fontSize: 16,

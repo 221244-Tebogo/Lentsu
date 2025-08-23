@@ -1,4 +1,3 @@
-// screens/VoiceApp.tsx
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import {
   SafeAreaView,
@@ -44,7 +43,6 @@ export default function VoiceApp() {
     return () => loop?.stop();
   }, [listening]);
 
-  // success “tap” sound (same asset used elsewhere)
   const playSuccess = useCallback(async () => {
     try {
       const { sound } = await Audio.Sound.createAsync(require("../assets/success-340660.mp3"));
@@ -53,7 +51,7 @@ export default function VoiceApp() {
     } catch {}
   }, []);
 
-  // wire voice events
+
   useEffect(() => {
     Voice.onSpeechStart = () => setListening(true);
     Voice.onSpeechEnd = () => setListening(false);
@@ -73,8 +71,6 @@ export default function VoiceApp() {
     };
 
     return () => {
-      // recommended cleanup pattern for react-native-voice
-      // @ts-ignore
       Voice.destroy().then(Voice.removeAllListeners).catch(() => {});
     };
   }, []);
@@ -98,7 +94,7 @@ export default function VoiceApp() {
       await Voice.stop();
       playSuccess();
     } catch (e: any) {
-      // ignore
+  
     } finally {
       setBusy(false);
     }
@@ -129,7 +125,7 @@ export default function VoiceApp() {
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Center: mic control (like your SOS/Login hero) */}
+   
       <View style={styles.center}>
         <Animated.View style={{ transform: [{ scale }] }}>
           <TouchableOpacity
@@ -146,13 +142,13 @@ export default function VoiceApp() {
         </Text>
       </View>
 
-      {/* Transcript card near bottom for one-hand reach */}
+      {/* Transcript card*/}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Transcript</Text>
         <Text style={styles.cardBody}>{text || "—"}</Text>
       </View>
 
-      {/* Bottom thumb-zone actions */}
+    
       <View style={styles.bottom}>
         <TouchableOpacity style={styles.btnPrimary} onPress={shareText} activeOpacity={0.95}>
           <Text style={styles.btnPrimaryText}>Share</Text>
@@ -301,62 +297,4 @@ const styles = StyleSheet.create({
     }),
   },
 });
-
-
-// import React, { useState } from 'react';
-// import { View, Text, Button, StyleSheet, Share } from 'react-native';
-// import Voice from '@react-native-voice/voice';
-
-// export default function App() {
-//   const [text, setText] = useState('');
-
-//   const startListening = async () => {
-//     Voice.onSpeechResults = (e) => setText(e.value[0]);
-//     await Voice.start('en-US');
-//   };
-
-//   const stopListening = async () => {
-//     await Voice.stop();
-//   };
-
-//   const clearText = () => {
-//     setText('');
-//   };
-
-//   const shareText = async () => {
-//     try {
-//       await Share.share({
-//         message: text,
-//       });
-//     } catch (error) {
-//       alert('Error sharing text: ' + error.message);
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Button title="Start Voice" onPress={startListening} color="#ffffff" />
-//       <View style={{ height: 10 }} />
-//       <Button title="Stop Voice" onPress={stopListening} color="#ffffff" />
-//       <View style={{ height: 10 }} />
-//       <Button title="Clear" onPress={clearText} color="#ff4444" />
-//       <View style={{ height: 10 }} />
-//       <Button title="Share" onPress={shareText} color="#00cc00" />
-//       <Text style={styles.resultText}>Result: {text}</Text>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 20,
-//     justifyContent: 'center',
-//   },
-//   resultText: {
-//     color: '#ffffff',
-//     fontSize: 18,
-//     marginTop: 20,
-//   },
-// });
 

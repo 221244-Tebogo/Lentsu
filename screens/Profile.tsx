@@ -123,7 +123,7 @@ export default function Profile({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: "transparent" }, // let your global gradient show
+  root: { flex: 1, backgroundColor: "transparent" }, // global gradient
   center: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 24 },
 
   avatar: {
@@ -181,7 +181,11 @@ const styles = StyleSheet.create({
     }),
   },
 
-  bottom: { paddingHorizontal: 16, paddingBottom: 20, gap: 12 },
+  bottom: { 
+    paddingHorizontal: 16, 
+    paddingBottom: 20, 
+    gap: 12 
+  },
 
   btnOutlineDestructive: {
     borderWidth: 1,
