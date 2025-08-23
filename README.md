@@ -31,7 +31,7 @@
   </a>
 </p>
 
-<!-- Tech Badges -->
+<!-- Badges -->
 <p align="center">
   <img src="https://img.shields.io/badge/Expo-000000?logo=expo&logoColor=white" />
   <img src="https://img.shields.io/badge/React%20Native-61DAFB?logo=react&logoColor=000" />
